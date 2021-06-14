@@ -1,0 +1,35 @@
+---
+- hosts: all
+  become: yes
+  vars:
+  - name: Kenneth
+  - course: DevOps
+
+  tasks:
+  - name: Install apache httpd  
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Install apache on RedHat
+    yum:
+      name: httpd
+      state: present
+    when: ansible_os_family == "RedHat"
+
+  - name: Start service httpd, if not started
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+
+  - name: Copy html to remote server
+    copy:
+      src: /home/ubuntu/index.html
+      dest: /var/www/html
+    when: ansible_os_family == "Debian"
+
+  - name: Print a statement
+    debug:
+      msg: "My Distro is: {{ ansible_os_family }}"

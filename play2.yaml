@@ -1,0 +1,29 @@
+---
+- hosts: all
+  vars_files:
+  - ./var.yaml
+  become: yes
+  tasks:
+  - name: Install apache httpd  
+    apt:
+      name: apache2
+      state: present
+    when: ansible_facts['os_family'] == "Ubuntu"
+  - name: install the latest version of Apache
+    yum:
+      name: httpd
+      state: present
+    when: ansible_os_family == "RedHat"
+  - name: Start service httpd, if not started
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+
+  - name: Copy file
+    copy:
+      src: /home/ubuntu/index.html
+      dest: /var/www/html
+  - name: Print linux distribution
+    debug:
+      msg: "{{ ansible_os_family  }}"

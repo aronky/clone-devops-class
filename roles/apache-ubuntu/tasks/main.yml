@@ -1,0 +1,8 @@
+---
+# tasks file for apache-ubuntu
+
+- name: Install apache on Ubuntu
+  apt:
+    name: apache2
+    state: present
+  when: ansible_facts['os_family'] == "Ubuntu"
